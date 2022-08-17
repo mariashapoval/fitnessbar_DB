@@ -1,0 +1,472 @@
+-- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+--
+-- Host: localhost    Database: fitnessbar
+-- ------------------------------------------------------
+-- Server version	8.0.28
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `brands`
+--
+
+DROP TABLE IF EXISTS `brands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `brands` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `brands`
+--
+
+LOCK TABLES `brands` WRITE;
+/*!40000 ALTER TABLE `brands` DISABLE KEYS */;
+INSERT INTO `brands` VALUES (1,'Ahma'),(2,'Mr.Belt'),(3,'Biotech'),(4,'Better bodies'),(5,'Bona Fide'),(6,'Hawk'),(7,'Green Hill'),(8,'Indigo'),(9,'Gasp'),(10,'Euro Classic'),(11,'Pro Supra'),(12,'Mad Max'),(13,'Sports workshops');
+/*!40000 ALTER TABLE `brands` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `brands_equipment`
+--
+
+DROP TABLE IF EXISTS `brands_equipment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `brands_equipment` (
+  `brand_id` bigint unsigned NOT NULL,
+  `equipment_id` bigint unsigned NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`brand_id`,`equipment_id`),
+  KEY `brand_id` (`brand_id`),
+  KEY `equipment_id` (`equipment_id`),
+  CONSTRAINT `brands_equipment_ibfk_1` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`),
+  CONSTRAINT `brands_equipment_ibfk_2` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `brands_equipment`
+--
+
+LOCK TABLES `brands_equipment` WRITE;
+/*!40000 ALTER TABLE `brands_equipment` DISABLE KEYS */;
+INSERT INTO `brands_equipment` VALUES (2,7,'2022-04-27 12:39:53'),(6,10,'2022-04-27 12:39:53'),(8,1,'2022-04-27 12:39:53'),(8,4,'2022-04-27 12:39:53'),(8,6,'2022-04-27 12:39:53'),(8,8,'2022-04-27 12:39:53'),(10,3,'2022-04-27 12:39:53'),(11,2,'2022-04-27 12:39:53'),(12,5,'2022-04-27 12:39:53'),(13,9,'2022-04-27 12:39:53');
+/*!40000 ALTER TABLE `brands_equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `category_ingredients`
+--
+
+DROP TABLE IF EXISTS `category_ingredients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `category_ingredients` (
+  `cat_id` bigint unsigned NOT NULL,
+  `ing_id` bigint unsigned NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cat_id`,`ing_id`),
+  KEY `cat_id` (`cat_id`),
+  KEY `ing_id` (`ing_id`),
+  CONSTRAINT `category_ingredients_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `rating_by_category` (`c_rating_id`),
+  CONSTRAINT `category_ingredients_ibfk_2` FOREIGN KEY (`ing_id`) REFERENCES `rating_by_ingredients` (`ig_rating_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category_ingredients`
+--
+
+LOCK TABLES `category_ingredients` WRITE;
+/*!40000 ALTER TABLE `category_ingredients` DISABLE KEYS */;
+INSERT INTO `category_ingredients` VALUES (1,1,'2022-04-27 12:39:54'),(1,4,'2022-04-27 12:39:54'),(1,7,'2022-04-27 12:39:54'),(2,9,'2022-04-27 12:39:54'),(3,3,'2022-04-27 12:39:54'),(4,8,'2022-04-27 12:39:54'),(4,10,'2022-04-27 12:39:54'),(5,5,'2022-04-27 12:39:54'),(9,2,'2022-04-27 12:39:54'),(9,9,'2022-04-27 12:39:54'),(10,7,'2022-04-27 12:39:54');
+/*!40000 ALTER TABLE `category_ingredients` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `clothes`
+--
+
+DROP TABLE IF EXISTS `clothes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clothes` (
+  `clothes_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `general_category` varchar(100) NOT NULL,
+  `clothes_type` varchar(100) NOT NULL,
+  `brand_cl` varchar(100) DEFAULT NULL,
+  `gender` enum('f','m','unisex') NOT NULL,
+  `sale` enum('yes','no') NOT NULL,
+  PRIMARY KEY (`clothes_id`),
+  UNIQUE KEY `clothes_id` (`clothes_id`),
+  CONSTRAINT `clothes_ibfk_1` FOREIGN KEY (`clothes_id`) REFERENCES `brands` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `clothes`
+--
+
+LOCK TABLES `clothes` WRITE;
+/*!40000 ALTER TABLE `clothes` DISABLE KEYS */;
+INSERT INTO `clothes` VALUES (1,'tourist clothing','thermal underwear','Ahma','m','no'),(2,'tourist clothing','hunting suit','Sports workshops','m','no'),(3,'tourist clothing','hat balaclava','Sports workshops','unisex','no'),(4,'caps and hats','cap','Gasp','unisex','yes'),(5,'leggings','leggings','Better bodies','f','yes'),(6,'leggings','leggings','Biotech','f','no'),(7,'leggings','leggings','Bona Fide','f','yes'),(8,'boxing uniform','shorts with a T-shirt','Green Hill','m','no'),(9,'boxing uniform','t-shirt','Biotech','m','no'),(10,'boxing uniform','kickboxing trousers','Green Hill','unisex','no'),(11,'leotards','gymnastic leotard','Indigo','f','no');
+/*!40000 ALTER TABLE `clothes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `equipment`
+--
+
+DROP TABLE IF EXISTS `equipment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equipment` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `description` varchar(100) DEFAULT NULL,
+  `kind_of_sport` varchar(100) NOT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `sale` enum('yes','no') NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipment`
+--
+
+LOCK TABLES `equipment` WRITE;
+/*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
+INSERT INTO `equipment` VALUES (1,'dumbbells and weights','gym','Indigo','no'),(2,'dumbbells and weights','gym','Pro Supra','no'),(3,'dumbbells and weights','gym','Euro Classic','no'),(4,'Massage mats','yoga','Indigo','no'),(5,'hooks and pulls','powerlifting','Mad Max','yes'),(6,'hooks and pulls','powerlifting','Indigo','no'),(7,'hooks and pulls','powerlifting','Mr.Belt','no'),(8,'backpacks','tourism','Indigo','no'),(9,'backpacks','tourism','Sports workshops','no'),(10,'dumbbells and weights','gym','Hawk','no');
+/*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `food`
+--
+
+DROP TABLE IF EXISTS `food`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `food` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `goal` varchar(100) NOT NULL,
+  `food_type` varchar(100) NOT NULL,
+  `ammount` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `food`
+--
+
+LOCK TABLES `food` WRITE;
+/*!40000 ALTER TABLE `food` DISABLE KEYS */;
+INSERT INTO `food` VALUES (1,'amino acids','sustenance','powder',158),(2,'bars and food','nutrition','solid food',47),(3,'vitamins and minerals','sustenance','pills',154),(4,'gainers','weight gain','powder',31),(5,'drinks','energy','liquid',24),(6,'fat burners','weight loss','pills',80),(7,'whey','muscle gain','powder',93),(8,'creatin','force','powder',24),(9,'carbs','energy','liquid',46),(10,'health','longevity','pills',135);
+/*!40000 ALTER TABLE `food` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `metro_users`
+--
+
+DROP TABLE IF EXISTS `metro_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `metro_users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `metrostation` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `metro_users`
+--
+
+LOCK TABLES `metro_users` WRITE;
+/*!40000 ALTER TABLE `metro_users` DISABLE KEYS */;
+INSERT INTO `metro_users` VALUES (1,'Begovaya'),(2,'Darys'),(3,'Prospect Veteranov'),(4,'New Yorks'),(5,'Siistrdsa'),(6,'Sennaya'),(7,'Prospekt Bolshevikov'),(8,'Sssaiek'),(9,'Academicheskaya'),(10,'Ligovskiy avenue');
+/*!40000 ALTER TABLE `metro_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rating_by_category`
+--
+
+DROP TABLE IF EXISTS `rating_by_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rating_by_category` (
+  `c_rating_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `cats` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`c_rating_id`),
+  UNIQUE KEY `c_rating_id` (`c_rating_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rating_by_category`
+--
+
+LOCK TABLES `rating_by_category` WRITE;
+/*!40000 ALTER TABLE `rating_by_category` DISABLE KEYS */;
+INSERT INTO `rating_by_category` VALUES (1,'whey'),(2,'vitamins and minerals'),(3,'amino acids'),(4,'joints and ligaments'),(5,'creatin'),(6,'fat burners'),(7,'energy'),(8,'bars and food'),(9,'health and longevity'),(10,'gainers');
+/*!40000 ALTER TABLE `rating_by_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rating_by_ingredients`
+--
+
+DROP TABLE IF EXISTS `rating_by_ingredients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rating_by_ingredients` (
+  `ig_rating_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `ig_cats` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`ig_rating_id`),
+  UNIQUE KEY `ig_rating_id` (`ig_rating_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rating_by_ingredients`
+--
+
+LOCK TABLES `rating_by_ingredients` WRITE;
+/*!40000 ALTER TABLE `rating_by_ingredients` DISABLE KEYS */;
+INSERT INTO `rating_by_ingredients` VALUES (1,'whey protein'),(2,'multivitamins'),(3,'bcaa'),(4,'whey protein isolate'),(5,'creatine monohydrate'),(6,'L-Сarnitine'),(7,'whey multicomponent'),(8,'glucosamine chondroitin'),(9,'fish oil'),(10,'collagen');
+/*!40000 ALTER TABLE `rating_by_ingredients` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `rbc`
+--
+
+DROP TABLE IF EXISTS `rbc`;
+/*!50001 DROP VIEW IF EXISTS `rbc`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `rbc` AS SELECT
+ 1 AS `c_rating_id`,
+ 1 AS `cats`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `rbi`
+--
+
+DROP TABLE IF EXISTS `rbi`;
+/*!50001 DROP VIEW IF EXISTS `rbi`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `rbi` AS SELECT
+ 1 AS `ig_rating_id`,
+ 1 AS `ig_cats`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `shop_adresses`
+--
+
+DROP TABLE IF EXISTS `shop_adresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `shop_adresses` (
+  `adress_id` bigint unsigned NOT NULL,
+  `metrostation` varchar(100) DEFAULT NULL,
+  `shop_address` varchar(100) NOT NULL,
+  PRIMARY KEY (`adress_id`),
+  KEY `shop_address` (`shop_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shop_adresses`
+--
+
+LOCK TABLES `shop_adresses` WRITE;
+/*!40000 ALTER TABLE `shop_adresses` DISABLE KEYS */;
+INSERT INTO `shop_adresses` VALUES (1,'Begovaya','Saint Petersburg, Savoushkina 124'),(2,'New Yorks','NY, South street 243'),(3,'sunny beach','SN,beach street 52'),(4,'Ligovskiy avenue','SPB, Transportniy 2'),(5,'Academicheskaya','Saint Petersburg, Nauki 17, housing 2'),(6,'Prospect Veteranov','Leningrad region, Peterhof Highway 45'),(7,'Siistrdsa','LLosdj, Seicstr street 56'),(8,'Sennaya','Saint Petersburg, Efimova 3'),(9,'lisbourn','Porto, Lisborn st, 453, 231324'),(10,'Prospekt Bolshevikov','SPB, kollontay house 21');
+/*!40000 ALTER TABLE `shop_adresses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nickname` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` char(11) NOT NULL,
+  `password_hash` char(20) DEFAULT NULL,
+  `address` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `address` (`address`),
+  KEY `email_2` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'lesyasport','rempel.sid@example.org','67535883338','5cf8ce0c4725c6bff124','Saint Petersburg, Savoushkina'),(2,'optio','jarred.moen@example.com','37525881338','69ff0b38aa9c1fd9bcea','712 Dare Parkway Apt'),(3,'et','braden.mayert@example.org','822-200-870','825c5854e16f7a150f70','Peterhof Highway'),(4,'consequuntur','joany.white@example.net','(308)502-36','92c0ed612a3fa62a1e8d','3349 Hoyt Viaduct Suite'),(5,'corporis','darrell49@example.com','006-285-971','162b4881d8fa4331f6e6','330 Heidi Pike Apt486'),(6,'est','crist.omari@example.net','510.070.283','3da8a0d03b544e5b6f51','Saint Petersburg, Efimova'),(7,'corrupti','gregory20@example.org','815.382.177','6ef1eb975980e6d18194','Saint Petersburg, kollontay'),(8,'sit','ludie.metz@example.net','509-416-495','84aea2223554f276edcf','6251 Toy Mission'),(9,'omnis','kellen.batz@example.net','(681)848-25','311d4285be5f3770455c','Saint Petersburg, Nauki 23'),(10,'summi','krocohz@example.net','99448485259','3rfwrgse46tersg5c','Saint Petersburg, Transportniy 34');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `users_phone` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
+
+	IF NEW.phone = '-' THEN
+
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Номер телефона должен быть указан.';
+
+END IF;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `users_shops`
+--
+
+DROP TABLE IF EXISTS `users_shops`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users_shops` (
+  `users_id` bigint unsigned NOT NULL,
+  `shops_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`users_id`,`shops_id`),
+  KEY `users_id` (`users_id`),
+  KEY `shops_id` (`shops_id`),
+  CONSTRAINT `users_shops_ibfk_1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `users_shops_ibfk_2` FOREIGN KEY (`shops_id`) REFERENCES `shop_adresses` (`adress_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_shops`
+--
+
+LOCK TABLES `users_shops` WRITE;
+/*!40000 ALTER TABLE `users_shops` DISABLE KEYS */;
+INSERT INTO `users_shops` VALUES (1,1),(3,6),(6,8),(7,10),(9,5),(10,4);
+/*!40000 ALTER TABLE `users_shops` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `view_address`
+--
+
+DROP TABLE IF EXISTS `view_address`;
+/*!50001 DROP VIEW IF EXISTS `view_address`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `view_address` AS SELECT
+ 1 AS `nickname`,
+ 1 AS `address`,
+ 1 AS `metrostation`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `rbc`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rbc`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rbc` AS select `rating_by_category`.`c_rating_id` AS `c_rating_id`,`rating_by_category`.`cats` AS `cats` from `rating_by_category` order by `rating_by_category`.`cats` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rbi`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rbi`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rbi` AS select `rating_by_ingredients`.`ig_rating_id` AS `ig_rating_id`,`rating_by_ingredients`.`ig_cats` AS `ig_cats` from `rating_by_ingredients` order by `rating_by_ingredients`.`ig_cats` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `view_address`
+--
+
+/*!50001 DROP VIEW IF EXISTS `view_address`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_address` AS select `users`.`nickname` AS `nickname`,`users`.`address` AS `address`,`metro_users`.`metrostation` AS `metrostation` from (`users` join `metro_users` on((`users`.`id` = `metro_users`.`id`))) order by `users`.`address` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-04-27 16:33:18

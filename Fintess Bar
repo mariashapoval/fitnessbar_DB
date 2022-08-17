@@ -1,0 +1,94 @@
+USE fitnessbar;
+-- пример запроса с SELECT
+SELECT description, kind_of_sport FROM equipment WHERE brand = 'Mad Max';
+SELECT name FROM brands WHERE name = 'Mad Max';
+-- совмещаем запросы
+SELECT description, kind_of_sport, (SELECT name FROM brands WHERE name = 'Mad Max') FROM equipment WHERE brand = 'Mad Max';
+SELECT count(*) FROM brands;
+SELECT nickname, address FROM users GROUP BY address;
+-- красиво выведем адреса юзеров
+SELECT case(address)
+  WHEN 'Saint Petersburg, Savoushkina' THEN 'SPB'
+  WHEN 'Saint Petersburg, Efimova' THEN 'SPB'
+  WHEN 'Saint Petersburg, kollontay' THEN 'SPB'
+  WHEN 'Saint Petersburg, Nauki 23' THEN 'SPB'
+  WHEN 'Saint Petersburg, Transportniy 34' THEN 'SPB'
+    WHEN 'Peterhof Highway' THEN 'suburb'
+       WHEN '712 Dare Parkway Apt' THEN 'not Russia'
+       WHEN '3349 Hoyt Viaduct Suite' THEN 'not Russia'
+       WHEN '330 Heidi Pike Apt486' THEN 'not Russia'
+       WHEN '6251 Toy Mission' THEN 'not Russia'
+END AS address FROM users;
+
+-- пример запроса с Union
+SELECT ig_cats FROM rating_by_ingredients rbi UNION SELECT cats FROM rating_by_category rbc ORDER BY ig_cats;
+
+-- пример запроса с Join
+DROP TABLE IF EXISTS metro_users;
+CREATE TABLE metro_users(
+id serial PRIMARY KEY,
+metrostation varchar(100));
+
+INSERT INTO metro_users VALUES (1, 'Begovaya'), (2,'Darys'), (3, 'Prospect Veteranov'), (4, 'New Yorks'), (5, 'Siistrdsa'), (6, 'Sennaya'), (7, 'Prospekt Bolshevikov'), (8, 'Sssaiek'), (9, 'Academicheskaya'), (10, 'Ligovskiy avenue');
+SELECT * FROM metro_users AS mu;
+
+SELECT * FROM users LEFT JOIN metro_users ON users.id = metro_users.id;
+SELECT * FROM metro_users LEFT JOIN shop_adresses ON metro_users.metrostation = shop_adresses.metrostation;
+-- сопоставим адреса магазинов с адресами юзеров через станции метро
+SELECT users.nickname, users.address, metro_users.metrostation FROM users
+JOIN metro_users ON users.id = metro_users.id
+JOIN shop_adresses ON metro_users.metrostation = shop_adresses.metrostation;
+
+-- еще один пример вложенного запроса
+SELECT name, food_type, ammount FROM food WHERE ammount = (SELECT max(ammount) FROM food);
+
+-- добавим представления
+SELECT * FROM rating_by_category;
+CREATE VIEW rbc AS SELECT * FROM rating_by_category ORDER BY cats;
+SELECT * FROM rbc;
+
+CREATE VIEW rbi AS SELECT * FROM rating_by_ingredients ORDER BY ig_cats;
+SELECT * FROM rbi;
+
+CREATE VIEW view_address as
+SELECT users.nickname, users.address, metro_users.metrostation FROM users JOIN metro_users ON (users.id = metro_users.id) ORDER BY address;
+SELECT * FROM view_address;
+
+-- создаем триггер
+DELIMITER //
+CREATE TRIGGER users_phone BEFORE insert ON users
+FOR EACH ROW BEGIN
+	IF NEW.phone = '-' THEN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Номер телефона должен быть указан.';
+END IF;
+END //
+
+DELIMITER ;
+INSERT INTO users VALUES (22, 'test', 'test1','-', 'test2', 'test3');
+
+-- напишем хранимую процедуру
+DELIMITER //
+CREATE PROCEDURE address_users (IN for_nickname_id BIGINT UNSIGNED)
+BEGIN
+	SELECT users.nickname, users.address, metro_users.metrostation FROM users
+    JOIN metro_users ON users.id = metro_users.id
+    JOIN shop_adresses ON metro_users.metrostation = shop_adresses.metrostation ORDER BY rand() LIMIT 3;
+END//
+DELIMITER ;
+CALL address_users(1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
