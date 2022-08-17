@@ -1,2 +1,2 @@
 # fitnessbar_DB
-Project for the site Fitnessbar.
+A collection of my SQL project for the site Fitnessbar.
